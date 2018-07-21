@@ -8,4 +8,7 @@ module.exports = function(app){
 
     app.route('/authenticate')
         .post(auth.authenticate);
+
+    app.route('/user/:UserId')
+        .post(auth.find_user);
 };

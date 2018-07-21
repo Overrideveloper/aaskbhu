@@ -81,3 +81,11 @@ exports.authenticate = function(req, res){
         });
     }
 }
+
+exports.find_user = function(req, res){
+    User.findById({ _id : req.params.UserId }, function(err, user){
+        if(err)
+            res.send(err);
+        res.json(user);
+    });
+};
