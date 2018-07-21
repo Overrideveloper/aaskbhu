@@ -7,11 +7,7 @@ var mongoose = require('mongoose'),
     User = mongoose.model('User');
 
 exports.signup = function(req, res){
-    if(!req.body.email || !req.body.password || !req.body.name){
-        res.status(500);
-        res.json({ message: 'provide all fields!'});
-    }
-    else{
+    console.log(req.body.email);
         var password = bcrypt.hashSync(req.body.password, 8);
         var user = new User({
             username: req.body.email,
@@ -20,41 +16,18 @@ exports.signup = function(req, res){
             password: password
         });
         user.save(function(err, user){
-            if(err){
-                res.status(500);
-                res.send(err);
-            }
-            else{
-                res.status(201);
-                res.json({ data: user.username, message: 'User created. Authenticate to get token'});
-            }
+                res.json({ _id: user._id, message: 'User created. Authenticate to get token'});
         });
-    }
 }
 
 exports.authenticate = function(req, res){
-    if(!req.body.username && req.body.password){
-        res.status(500);
-        res.json({ message: 'username not provided'});
-    }
-    else if(!req.body.password && req.body.username){
-        res.status(500);
-        res.json({ message: 'password not provided'});
-    }
-    else if(!req.body.password && !req.body.username){
-        res.status(500);
-        res.json({ message: 'username and password not provided'});
-    }
-    else{
         User.findOne({
             username: req.body.username
         }, function(err, user){
             if(err){
-                res.status(500);
                 throw err;
             }
             if(!user){
-                res.status(404);
                 res.json({ message: 'Auth failed. User not found'});
             }
             else if(user){
@@ -70,22 +43,17 @@ exports.authenticate = function(req, res){
                     var token = jwt.sign(payload, config.crpyt, {
                         expiresIn: 1440
                     });
-
-                    res.status(200);
                     res.json({
                         message: true,
-                        data: token
+                        _id: user._id
                     });
                 }
             }
         });
-    }
 }
 
 exports.find_user = function(req, res){
     User.findById({ _id : req.params.UserId }, function(err, user){
-        if(err)
-            res.send(err);
         res.json(user);
     });
 };

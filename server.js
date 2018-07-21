@@ -33,6 +33,8 @@ function(err){
 app.set('crypt', config.crpyt);
 app.use(bodyparser.urlencoded({ extended: true }));
 app.use(bodyparser.json());
+app.use(bodyparser.raw())
+app.use(bodyparser.text())
 
 app.use(function(req, res, next){
     res.setHeader('Access-Control-Allow-Origin', '*');
