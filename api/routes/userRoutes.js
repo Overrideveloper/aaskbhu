@@ -10,5 +10,5 @@ module.exports = function(app){
         .post(auth.authenticate);
 
     app.route('/user/:UserId')
-        .post(auth.find_user);
+        .get(auth.find_user);
 };
